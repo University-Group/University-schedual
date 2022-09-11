@@ -1,9 +1,6 @@
 # GASchedule.py
 Making a Class Schedule Using a Genetic Algorithm with Python
 
-# Introduction
-Making a class schedule is one of those NP hard problems. The problem can be solved using a heuristic search algorithm to find the optimal solution, but it only works for simple cases. For more complex inputs and requirements, finding a considerably good solution can take a while, or it may be impossible. This is where genetic algorithms come in to the game. In this article, I assume that you are familiar with the basic concepts of genetic algorithms, and I won't describe them in detail because it has been done so many times before.
-
 # Background
 When you make a class schedule, you must take into consideration many requirements (number of professors, students, classes and classrooms, size of classroom, laboratory equipment in classroom, and many others). These requirements can be divided into several groups by their importance. Hard requirements (if you break one of these, then the schedule is infeasible):
 
@@ -11,12 +8,13 @@ A class can be placed only in a spare classroom.
 No professor or student group can have more then one class at a time.
 A classroom must have enough seats to accommodate all students.
 To place a class in a classroom, the classroom must have laboratory equipment (computers, in our case) if the class requires it.
+A class should be at the preferred time of the professor or several professors (if a class has more than one professor that teach it).
+
 Some soft requirements (can be broken, but the schedule is still feasible):
 
-Preferred time of class by professors.
-Preferred classroom by professors.
-Distribution (in time or space) of classes for student groups or professors.
-Hard and soft requirements, of course, depend on the situation. In this example, only hard requirements are implemented. Let's start by explaining the objects which makes a class schedule.
+Preferred time of class by teachers.
+Distribution (in time or space) of classes for student groups.
+Early Class time preferred for student groups.  
 
 # Objects of Class Schedule
 Professor
@@ -69,51 +67,3 @@ Randomly selects N pairs of parents from the current population and produces N n
 Randomly selects N chromosomes from the current population and replaces them with new ones. The algorithm doesn't select chromosomes for replacement if it is among the best chromosomes in the population.
 And, these two operations are repeated until the best chromosome reaches a fitness value equal to 1 (meaning that all classes in the schedule meet the requirement). As mentioned before, the genetic algorithm keeps track of the M best chromosomes in the population, and guarantees that they are not going to be replaced while they are among the best chromosomes.
 
-# Configuration JSON File
-Types of objects:
-
-professor - describes a professor.<br />
-course - describes a course.<br />
-room - describes a room.<br />
-group - describes a students group.<br />
-class - describes a class, and binds the professor, course, and students group.<br />
-
-prof:<br />
-id (number, required) - ID of the professor.<br />
-name (string, required) - name of the professor.<p />
-course:<br />
-id (number, required) - ID of the course.<br />
-name (string, required) - name of the course.<p />
-room:<br />
-name (string, required) - name of the room.<br />
-size (number, required) - number of seats in the room.<br />
-lab (boolean, optional) - indicates if the room is a lab (has computers); if not specified, the default value is false.<p />
-group:<br />
-id (number, required) - ID of the students group.<br />
-name (string, required) - name of the students group.<br />
-size (number, required) - number of students in the group.<p />
-class:<br />
-professor (number, required) - ID of a professor; binds a professor to a class.<br />
-course (number, required) - ID of a course; binds a course to a class.<br />
-group (number, required) - ID of a students group; binds the students group to a class; each class can be bound to multiple students groups.<br />
-duration (number, optional) - duration of class (in hours); if not specified, the default value is 1.<br />
-lab (boolean, optional) - if the class requires computers in a room; if not specified, the default value is false.<br />
-
-Note that the professor, students group, and course objects must be defined before they are bound to a course class object.
-
-<img src="https://i.stack.imgur.com/QDPIS.png" /></p>
-# How to call this api
-If you are using Python, you would call GASchedule as follows:
-
-```python
-    file_name = "/GaSchedule.json"
-    start_time = int(round(time.time() * 1000))
-
-    configuration = Configuration.Configuration()
-    target_file = str(pathlib.Path().absolute()) + file_name
-    configuration.parseFile(target_file)
-
-    alg = Ngra.Ngra(configuration)
-    alg.run()
-    html_result = HtmlOutput.HtmlOutput.getResult(alg.result)
-```
