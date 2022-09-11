@@ -4,11 +4,16 @@ Making a Class Schedule Using a Genetic Algorithm with Python
 # Background
 When you make a class schedule, you must take into consideration many requirements (number of professors, students, classes and classrooms, size of classroom, laboratory equipment in classroom, and many others). These requirements can be divided into several groups by their importance. Hard requirements (if you break one of these, then the schedule is infeasible):
 
-A class can be placed only in a spare classroom.
-No professor or student group can have more then one class at a time.
-A classroom must have enough seats to accommodate all students.
-To place a class in a classroom, the classroom must have laboratory equipment (computers, in our case) if the class requires it.
-A class should be at the preferred time of the professor or several professors (if a class has more than one professor that teach it).
+A class can be placed only in a spare classroom.  
+
+No professor or student group can have more then one class at a time.  
+
+A classroom must have enough seats to accommodate all students.  
+
+To place a class in a classroom, the classroom must have laboratory equipment (computers, in our case) if the class requires it.  
+
+A class should be at the preferred time of the professor or several professors (if a class has more than one professor that teach it).  
+
 
 Some soft requirements (can be broken, but the schedule is still feasible):
 
