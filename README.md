@@ -5,37 +5,33 @@ Making a Class Schedule Using a Genetic Algorithm with Python
 When you make a class schedule, you must take into consideration many requirements (number of professors, students, classes and classrooms, size of classroom, laboratory equipment in classroom, and many others). These requirements can be divided into several groups by their importance. Hard requirements (if you break one of these, then the schedule is infeasible):
 
 A class can be placed only in a spare classroom.  
-
 No professor or student group can have more then one class at a time.  
-
 A classroom must have enough seats to accommodate all students.  
-
 To place a class in a classroom, the classroom must have laboratory equipment (computers, in our case) if the class requires it.  
-
 A class should be at the preferred time of the professor or several professors (if a class has more than one professor that teach it).  
 
 
 Some soft requirements (can be broken, but the schedule is still feasible):
 
-Preferred time of class by teachers.
-Distribution (in time or space) of classes for student groups.
+Preferred time of class by teachers.  
+Distribution (in time or space) of classes for student groups.  
 Early Class time preferred for student groups.  
 
 # Objects of Class Schedule
 Professor
-The Professor class has an ID and the name of the professor. It also contains a list of classes that a professor teaches.
+The Professor class has an ID and the name of the professor and a boolean variable to determine if it is a professor or teacher. It also contains a list of classes that a professor teaches and the preferred days and times to teach.
 
 Students Group
 The StudentsGroup class has an ID and the name of the student group, as well as the number of students (size of group). It also contains a list of classes that the group attends.
 
 Classroom
-The Room class has an ID and the name of the classroom, as well as the number of seats and information about equipment (computers). If the classroom has computers, it is expected that there is a computer for each seat. IDs are generated internally and automatically.
+The Room class has an ID and the name of the classroom, as well as the number of seats and a boolean variable to determine if it is a laboratory or amphitheater. IDs are generated internally and automatically.
 
 Course
-The Course class has an ID and the name of the course.
+The Course class has an ID and the name of the course, as well as the year related to this course and the specialization.
 
 Class
-CourseClass holds a reference to the course to which the class belongs, a reference to the professor who teaches, and a list of student groups that attend the class. It also stores how many seats (sum of student groups' sizes) are needed in the classroom, if the class requires computers in the classroom, and the duration of the class (in hours).
+CourseClass holds a reference to the course to which the class belongs, a reference to a list of professors who teach, and a list of student groups that attend the class. It also stores how many seats (sum of student groups' sizes) are needed in the classroom, if the class requires computers in the classroom, the duration of the class (in hours) and the section that all student groups belong to.
 
 Chromosome
 The first thing we should consider when we deal with a genetic algorithm is how to represent our solution in such a way that it is feasible for genetic operations such as crossover and mutation. Also, we should know how to specify how good our solution is. In other words, we should be able to calculate the fitness value of our solution.
@@ -46,14 +42,15 @@ The result will be displayed in form of HTML table. The program would open the d
 <img src="https://i.stack.imgur.com/QDPIS.png" /></p>
 
 # Fitness
-Now we need to assign a fitness value to the chromosome. As I previously said, only hard requirements are used to calculate the fitness of a class schedule. This is how we do it:
+Now we need to assign a fitness value to the chromosome. This is how we do it:
 
 Each class can have 0 to 5 points.
 If a class uses a spare classroom, we increment its score.
 If a class requires computers and it is located in the classroom with them, or it doesn't require them, we increment the score of the class.
 If a class is located in a classroom with enough available seats, guess what, we increment its score.
 If a professor has no other classes at the time, we increment the class's score once again.
-The last thing that we check is if any of the student groups that attend the class has any other class at the same time, and if they don't, we increment the score of the class.
+If any of the student groups that attend the class has any other class at the same time, and if they don't, we increment the score of the class.  
+The last thing that we check is if a class is in the preferred time of the professor or in the combined times of all the professors, we increment the score of the class.  
 If a class breaks a rule at any time-space slot that it occupies, its score is not incremented for that rule.
 The total score of a class schedule is the sum of points of all classes.
 The fitness value is calculated as schedule_score/maximum_score, and maximum_score is number_of_classes*5.
@@ -71,4 +68,8 @@ The genetic algorithm is fairly simple. For each generation, it performs two bas
 Randomly selects N pairs of parents from the current population and produces N new chromosomes by performing a crossover operation on the pair of parents.
 Randomly selects N chromosomes from the current population and replaces them with new ones. The algorithm doesn't select chromosomes for replacement if it is among the best chromosomes in the population.
 And, these two operations are repeated until the best chromosome reaches a fitness value equal to 1 (meaning that all classes in the schedule meet the requirement). As mentioned before, the genetic algorithm keeps track of the M best chromosomes in the population, and guarantees that they are not going to be replaced while they are among the best chromosomes.
+
+# Note
+We have used the core of the project and added some attributes to the objects that are needed in our university secheduel.  
+We also handled new soft constraints and change the fitness function depending on both hard and soft constraints.  
 
